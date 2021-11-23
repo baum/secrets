@@ -22,6 +22,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	google.golang.org/api v0.14.0
 	google.golang.org/protobuf v1.25.0 // indirect
+	k8s.io/apimachinery v0.17.1-beta.0
 )
 
 replace (

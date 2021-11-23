@@ -1,0 +1,22 @@
+name: k8s test
+
+# Run on each new PR and each new push to existing PR
+on: [push, pull_request]
+
+jobs:
+  run-k8s-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: deploy kind cluster
+        run: |
+          tests/scripts/install-5nodes-kind-cluster.sh
+
+      - name: k8s-test
+        run: |
+          kubectl create -f tests/yaml/golang-pod.yaml
+          kubectl wait pod golang --for condition=ready --timeout=300s
+          kubectl cp ../secrets golang:/go
+          kubectl exec golang -- bash -c "cd secrets && go test -timeout 300s -v github.com/libopenstorage/secrets/k8s --tags=k8s"
